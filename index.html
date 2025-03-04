@@ -55,9 +55,24 @@
         <button class="teleport">Teleport to Waypoint</button>
     </div>
     <script>
-        // Function to send actions to Lua (replace 'rick-menu' with the actual resource name)
+        // This variable will hold the resource name injected from Lua
+        let resourceName = "";
+
+        // Receive the resource name from Lua when the NUI is opened
+        window.addEventListener("message", function(event) {
+            if (event.data.action === "setResourceName") {
+                resourceName = event.data.resourceName;
+                console.log("Resource Name: " + resourceName);  // For debugging purposes
+            }
+        });
+
+        // Function to send actions to Lua (automatically using resource name)
         function sendAction(action) {
-            fetch(`https://rick-menu/${action}`).then(res => console.log(action + " sent"));
+            if (resourceName) {
+                fetch(`https://${resourceName}/${action}`).then(res => console.log(action + " sent"));
+            } else {
+                console.error("Resource name not set!");
+            }
         }
 
         // Add event listeners to buttons
