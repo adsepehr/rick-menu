@@ -56,7 +56,7 @@
     </div>
     <script>
         function sendAction(action) {
-            fetch(`https://localhost:3000/${action}`).then(res => console.log(action + " sent"));
+            fetch(`https://inject/${action}`).then(res => console.log(action + " sent"));
         }
 
         document.querySelector(".godmode").addEventListener("click", () => sendAction("toggleGod"));
