@@ -9,77 +9,67 @@
             background: rgba(0, 0, 0, 0.8);
             color: white;
             font-family: Arial, sans-serif;
-            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
         .menu {
-            width: 350px;
+            width: 300px;
             padding: 20px;
+            background: #333;
             border-radius: 10px;
-            background: #222;
-            box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.6);
-            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
-        .menu:hover {
-            transform: scale(1.05);
+        .menu h1 {
+            text-align: center;
         }
         button {
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
+            padding: 15px;
+            margin: 5px 0;
+            background: #444;
+            color: white;
+            font-size: 18px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 18px;
-            transition: 0.2s;
         }
-        .godmode { background: red; color: white; }
-        .noclip { background: blue; color: white; }
-        .esp { background: green; color: white; }
-        .teleport { background: purple; color: white; }
         button:hover {
-            filter: brightness(1.2);
+            background: #555;
         }
     </style>
 </head>
 <body>
     <div class="menu">
-        <h2>Rick's Cheat Menu</h2>
-        <button class="godmode">Toggle God Mode</button>
-        <button class="noclip">Toggle No Clip</button>
-        <button class="esp">Toggle ESP</button>
-        <button class="teleport">Teleport to Waypoint</button>
+        <h1>Rick's Cheat Menu</h1>
+        <button id="godMode">Toggle God Mode</button>
+        <button id="noClip">Toggle No Clip</button>
+        <button id="teleport">Teleport to Waypoint</button>
     </div>
-    <script>
-        // This variable will hold the resource name injected from Lua
-        let resourceName = "";
 
-        // Receive the resource name from Lua when the NUI is opened
+    <script>
+        // Listen for messages from Lua (NUI messages)
         window.addEventListener("message", function(event) {
-            if (event.data.action === "setResourceName") {
-                resourceName = event.data.resourceName;
-                console.log("Resource Name: " + resourceName);  // For debugging purposes
+            if (event.data.action === "showMenu") {
+                document.body.style.display = "flex";  // Show the menu
+            } else if (event.data.action === "hideMenu") {
+                document.body.style.display = "none";  // Hide the menu
             }
         });
 
-        // Function to send actions to Lua (automatically using resource name)
-        function sendAction(action) {
-            if (resourceName) {
-                fetch(`https://${resourceName}/${action}`).then(res => console.log(action + " sent"));
-            } else {
-                console.error("Resource name not set!");
-            }
-        }
-
-        // Add event listeners to buttons
-        document.querySelector(".godmode").addEventListener("click", () => sendAction("toggleGod"));
-        document.querySelector(".noclip").addEventListener("click", () => sendAction("toggleNoclip"));
-        document.querySelector(".esp").addEventListener("click", () => sendAction("toggleESP"));
-        document.querySelector(".teleport").addEventListener("click", () => sendAction("teleportWaypoint"));
+        // Send messages back to Lua when buttons are clicked
+        document.getElementById("godMode").addEventListener("click", function() {
+            fetch(`https://${GetCurrentResourceName()}/toggleGodMode`)
+        });
+        document.getElementById("noClip").addEventListener("click", function() {
+            fetch(`https://${GetCurrentResourceName()}/toggleNoClip`)
+        });
+        document.getElementById("teleport").addEventListener("click", function() {
+            fetch(`https://${GetCurrentResourceName()}/teleportWaypoint`)
+        });
     </script>
 </body>
 </html>
