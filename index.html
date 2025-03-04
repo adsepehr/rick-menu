@@ -55,10 +55,12 @@
         <button class="teleport">Teleport to Waypoint</button>
     </div>
     <script>
+        // Function to send actions to Lua (replace 'rick-menu' with the actual resource name)
         function sendAction(action) {
-            fetch(`https://inject/${action}`).then(res => console.log(action + " sent"));
+            fetch(`https://rick-menu/${action}`).then(res => console.log(action + " sent"));
         }
 
+        // Add event listeners to buttons
         document.querySelector(".godmode").addEventListener("click", () => sendAction("toggleGod"));
         document.querySelector(".noclip").addEventListener("click", () => sendAction("toggleNoclip"));
         document.querySelector(".esp").addEventListener("click", () => sendAction("toggleESP"));
